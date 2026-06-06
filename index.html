@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolidWorks CAD - Universidad de Cundinamarca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. CONFIGURACIÓN BASE Y COLORES INSTITUCIONALES UdeC */
+        :root {
+            --udec-green: #007B3E;
+            --udec-gold: #DAAA00;
+            --udec-dark-green: #00482B;
+            --udec-white: #FFFFFF;
+            --text-main: #1e293b;
+            --text-sub: #475569;
+            --bg-accent: #f8fafc;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: var(--text-main);
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* CONTENEDOR PRINCIPAL DE DIAPOSITIVAS */
+        .presentation-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            aspect-ratio: 16 / 9;
+            background: var(--udec-white);
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* CONTENEDOR INDIVIDUAL DE SLIDE */
+        .slide-container {
+            display: none; /* Controlado por JavaScript */
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            padding: 40px 60px 80px 60px;
+            position: relative;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide-container.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* LÍNEA DE DECORACIÓN DE MARCA */
+        .presentation-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--udec-green) 0%, var(--udec-gold) 50%, var(--udec-dark-green) 100%);
+            z-index: 10;
+        }
+
+        /* 2. TIPOGRAFÍA Y DISEÑO CONSULTORÍA */
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--udec-dark-green);
+        }
+
+        .slide-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            border-left: 6px solid var(--udec-gold);
+            padding-left: 15px;
+            line-height: 1.2;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        p, li { 
+            font-size: 17px; 
+            line-height: 1.6; 
+            color: var(--text-sub); 
+        }
+
+        /* LAYOUT PORTADA */
+        .title-layout {
+            background: linear-gradient(135deg, var(--udec-dark-green) 0%, var(--udec-green) 100%);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .title-layout h1 {
+            color: var(--udec-gold);
+            font-size: 52px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .title-layout p {
+            color: white;
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        /* ESTRUCTURAS DE COLUMNAS Y CONTENEDORES */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .tiled-content {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .tile {
+            background-color: var(--bg-accent);
+            border-radius: 8px;
+            border-top: 4px solid var(--udec-green);
+            padding: 20px;
+            flex: 1;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .tile:hover {
+            transform: translateY(-4px);
+        }
+
+        .tile h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--udec-dark-green);
+        }
+
+        .tile .icon {
+            font-size: 32px;
+            color: var(--udec-green);
+            margin-bottom: 12px;
+        }
+
+        /* CONTENEDOR DE ILUSTRACIONES VECTORIALES */
+        .image-wrapper {
+            border-radius: 8px;
+            overflow: hidden;
+            height: 320px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .image-wrapper svg {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+        }
+
+        /* TABLAS DE CONTENIDO */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+        }
+
+        th {
+            background: var(--udec-green);
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            font-size: 15px;
+        }
+
+        /* 3. MECANISMO DE NAVEGACIÓN Y FOOTER */
+        .nav-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--bg-accent);
+            display: flex;
+            justify-space-between: space-between;
+            align-items: center;
+            padding: 0 60px;
+            border-top: 1px solid #e2e8f0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            background-color: var(--udec-green);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--udec-dark-green);
+        }
+
+        .nav-btn:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+            color: #94a3b8;
+        }
+
+        .nav-btn.locked-btn {
+            background-color: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-indicator {
+            font-size: 14px;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .motto-text {
+            color: var(--udec-green);
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 12px;
+        }
+
+        /* 4. ESTILIZACIÓN DE QUIZ INTERACTIVO */
+        .quiz-box {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .quiz-question {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--udec-dark-green);
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateX(4px);
+        }
+
+        .option-item.correct {
+            border-color: var(--udec-green) !important;
+            background-color: #dcfce7 !important;
+            color: #15803d !important;
+            font-weight: 700;
+        }
+
+        .option-item.wrong {
+            border-color: #ef4444 !important;
+            background-color: #fee2e2 !important;
+            color: #b91c1c !important;
+        }
+
+        .feedback-message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+            text-align: center;
+        }
+
+        .feedback-message.correct-msg {
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .feedback-message.wrong-msg {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        /* DIAPOSITIVA TIPO COMBINADO (MURAL) */
+        .mural-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .number-badge {
+            background: var(--udec-green);
+            color: white;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0 auto 15px;
+            border: 4px solid var(--udec-gold);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="presentation-wrapper">
+
+    <!-- SLIDE 1: PORTADA -->
+    <div class="slide-container title-layout active" id="slide0">
+        <p style="text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Universidad de Cundinamarca</p>
+        <h1>SolidWorks CAD:<br>Modela tu Robot</h1>
+        <p>Parte 1: Fundamentos, Interfaz y Modelado Inicial</p>
+        <div style="margin-top: 40px; font-size: 16px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; width: 60%;">
+            <p><strong>Gestores del Conocimiento:</strong> M. Catalina Pulido, A. Fernando Fernández, Diana C. Vega</p>
+            <p style="font-size: 14px; opacity: 0.8; margin-top: 5px;">Proyecto de Interacción Social ISU-287 | Sede Fusagasugá</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: PRESENTACIÓN MEDIT -->
+    <div class="slide-container" id="slide1">
+        <h2 class="slide-title">Presentación Institucional</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p>Esta cartilla interactiva ha sido diseñada bajo los lineamientos de la <strong>Universidad de Cundinamarca</strong> y la VII Convocatoria de Interacción Social.</p>
+                    <p style="margin-top: 20px;">Nos guiamos por el Modelo Educativo Digital Transmoderno (<strong>MEDIT</strong>), donde transformamos el aula tradicional en un ecosistema dinámico y tecnológico.</p>
+                </div>
+                <div class="tile" style="border-left: 5px solid var(--udec-gold);">
+                    <h3 style="color: var(--udec-green);"><i class="fa-solid fa-graduation-cap"></i> Roles Clave</h3>
+                    <p style="margin-top: 10px;"><strong>Docentes:</strong> Gestores del Conocimiento y del Aprendizaje.</p>
+                    <p style="margin-top: 10px;"><strong>Estudiantes:</strong> Creadores de Oportunidades que impactan la sociedad y el territorio.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: OBJETIVOS -->
+    <div class="slide-container" id="slide2">
+        <h2 class="slide-title">Objetivos Pedagógicos</h2>
+        <div class="content-area">
+            <div class="tiled-content">
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-bullseye"></i></div>
+                    <h3>Objetivo General</h3>
+                    <p style="font-size: 14px;">Apropiar los fundamentos del modelado paramétrico 3D para diseñar y validar piezas mecánicas del chasis de un robot prototipo.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-gears"></i></div>
+                    <h3>Especifico 1</h3>
+                    <p style="font-size: 14px;">Reconocer la interfaz de usuario de SolidWorks, el sistema de unidades métricas (MMGS) y la gestión del árbol de operaciones.</p>
+                </div>
+                <div class="tile">
+                    <div class="icon"><i class="fa-solid fa-cube"></i></div>
+                    <h3>Especifico 2</h3>
+                    <p style="font-size: 14px;">Construir piezas mediante procesos de extrusión y revolución, verificando la consistencia mediante listas de chequeo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: CONCEPTOS GENERALES -->
+    <div class="slide-container" id="slide3">
+        <h2 class="slide-title">Ecosistema SolidWorks CAD</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p>SolidWorks es un entorno paramétrico basado en características. Su mayor virtud es la <strong>Asociatividad Bidireccional</strong>:</p>
+                    <ul style="margin-top: 15px; margin-left: 20px; list-style-type: square;">
+                        <li style="margin-bottom: 10px;">Un cambio en el modelo 3D actualiza instantáneamente los planos de fabricación 2D y los ensambles finales.</li>
+                        <li style="margin-bottom: 10px;">Facilita la documentación técnica de componentes robóticos con precisión milimétrica.</li>
+                    </ul>
+                </div>
+                <div class="image-wrapper">
+                    <!-- Ilustración interactiva UdeC de Asociatividad Paramétrica -->
+                    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Cuadrícula técnica de fondo -->
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                        
+                        <!-- Lado Izquierdo: Modelo 3D de Pieza -->
+                        <g transform="translate(40, 40)">
+                            <!-- Cubo Isométrico Mecatrónico -->
+                            <path d="M 60 40 L 110 15 L 160 40 L 110 65 Z" fill="#dcfce7" stroke="#007B3E" stroke-width="2"/>
+                            <path d="M 60 40 L 60 100 L 110 125 L 110 65 Z" fill="#007B3E" opacity="0.8" stroke="#007B3E" stroke-width="2"/>
+                            <path d="M 110 65 L 110 125 L 160 100 L 160 40 Z" fill="#00482B" stroke="#007B3E" stroke-width="2"/>
+                            <!-- Agujero circular en el cubo para sensor -->
+                            <ellipse cx="110" cy="40" rx="15" ry="7" fill="none" stroke="#DAAA00" stroke-width="2" stroke-dasharray="4,2"/>
+                            <text x="75" y="145" font-family="Poppins" font-size="12" fill="#00482B" font-weight="bold">Modelo 3D (Pieza)</text>
+                        </g>
+
+                        <!-- Conector bidireccional -->
+                        <g transform="translate(195, 100)">
+                            <path d="M 0 10 L 25 10 L 25 0 L 40 15 L 25 30 L 25 20 L 0 20 Z" fill="#DAAA00"/>
+                            <path d="M 10 10 L -15 10 L -15 0 L -30 15 L -15 30 L -15 20 L 10 20 Z" fill="#007B3E"/>
+                            <text x="-25" y="-15" font-family="Poppins" font-size="10" fill="#00482B" font-weight="bold">ASOCIATIVIDAD</text>
+                        </g>
+
+                        <!-- Lado Derecho: Plano 2D Acotado -->
+                        <g transform="translate(240, 40)">
+                            <!-- Hoja de dibujo técnico -->
+                            <rect x="10" y="10" width="130" height="110" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+                            <rect x="18" y="18" width="114" height="94" fill="none" stroke="#cbd5e1" stroke-width="1"/>
+                            <!-- Proyecciones del bloque -->
+                            <rect x="40" y="30" width="40" height="30" fill="none" stroke="#1e293b" stroke-width="2"/>
+                            <circle cx="60" cy="45" r="8" fill="none" stroke="#DAAA00" stroke-width="1.5"/>
+                            <!-- Líneas de cota -->
+                            <line x1="40" y1="70" x2="80" y2="70" stroke="#007B3E" stroke-width="1"/>
+                            <path d="M 40 70 L 45 67 L 45 73 Z" fill="#007B3E"/>
+                            <path d="M 80 70 L 75 67 L 75 73 Z" fill="#007B3E"/>
+                            <text x="50" y="82" font-family="monospace" font-size="9" fill="#007B3E" font-weight="bold">50.00</text>
+                            <text x="25" y="145" font-family="Poppins" font-size="12" fill="#00482B" font-weight="bold">Dibujo 2D (Plano)</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: QUIZ 1 (BLOQUEANTE) -->
+    <div class="slide-container" id="slide4" data-quiz="true" data-solved="false" data-correct-index="1">
+        <h2 class="slide-title">Desafío 1: Entendiendo la Asociatividad</h2>
+        <div class="content-area">
+            <div class="quiz-box">
+                <p class="quiz-question">¿Qué sucede si modificas la dimensión de una cota en el plano técnico 2D (Dibujo)?</p>
+                <div class="options-list">
+                    <div class="option-item" onclick="checkAnswer(this, 0, 4)">
+                        <span>A. Nada, solo cambia de manera visual en ese plano de dibujo 2D.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 1, 4)">
+                        <span>B. Se modifica automáticamente en la pieza 3D y en todos los ensambles donde se use.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 2, 4)">
+                        <span>C. El sistema genera un error y bloquea la edición del archivo de manera definitiva.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                </div>
+                <div id="feedback-4" class="feedback-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: AMBITOS DE APLICACIÓN -->
+    <div class="slide-container" id="slide5">
+        <h2 class="slide-title">Ámbitos y Aplicaciones</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-circle-check" style="color: var(--udec-green);"></i> <strong>Ingeniería Mecánica:</strong> Diseño estructural y análisis cinemático de robots.</li>
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-circle-check" style="color: var(--udec-green);"></i> <strong>Investigación Biomédica:</strong> Prótesis mecánicas y ayudas motrices.</li>
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-circle-check" style="color: var(--udec-green);"></i> <strong>Fabricación Aditiva:</strong> Modelos optimizados para impresión 3D en la provincia del Sumapaz.</li>
+                    </ul>
+                </div>
+                <div class="image-wrapper">
+                    <!-- Ilustración de Brazo Robótico de precisión en SolidWorks -->
+                    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#f8fafc" />
+                        <g transform="translate(100, 240)">
+                            <!-- Base del robot -->
+                            <rect x="-40" y="-10" width="80" height="20" rx="4" fill="#00482B" stroke="#007B3E" stroke-width="2"/>
+                            <ellipse cx="0" cy="-10" rx="30" ry="10" fill="#007B3E"/>
+                            
+                            <!-- Eje articulación 1 -->
+                            <circle cx="0" cy="-40" r="15" fill="#DAAA00" stroke="#00482B" stroke-width="2"/>
+                            
+                            <!-- Eslabón 1 (Brazo) -->
+                            <path d="M -10 -40 L -6 -130 L 6 -130 L 10 -40 Z" fill="#007B3E" opacity="0.9" stroke="#00482B" stroke-width="2"/>
+                            
+                            <!-- Articulación 2 -->
+                            <circle cx="0" cy="-130" r="12" fill="#DAAA00" stroke="#00482B" stroke-width="2"/>
+                            
+                            <!-- Eslabón 2 (Antebrazo rotado) -->
+                            <g transform="translate(0, -130) rotate(45)">
+                                <path d="M -8 0 L -5 -80 L 5 -80 L 8 0 Z" fill="#00482B" stroke="#007B3E" stroke-width="2"/>
+                                <!-- Actuador final / Pinza -->
+                                <circle cx="0" cy="-80" r="8" fill="#DAAA00"/>
+                                <path d="M -12 -80 L -18 -100 L -8 -100 Z" fill="#007B3E"/>
+                                <path d="M 12 -80 L 18 -100 L 8 -100 Z" fill="#007B3E"/>
+                                <!-- Objeto sujetado -->
+                                <rect x="-6" y="-115" width="12" height="15" fill="#DAAA00" rx="2"/>
+                            </g>
+                        </g>
+                        <!-- Elementos de acotación del espacio de simulación -->
+                        <path d="M 100 240 A 180 180 0 0 1 270 110" fill="none" stroke="#007B3E" stroke-width="1.5" stroke-dasharray="6,4"/>
+                        <text x="210" y="90" font-family="Poppins" font-size="11" fill="#00482B" font-weight="bold">Rango de Movimiento</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: INTERFAZ DE USUARIO -->
+    <div class="slide-container" id="slide6">
+        <h2 class="slide-title">La Interfaz del Software</h2>
+        <div class="content-area">
+            <div class="tiled-content">
+                <div class="tile">
+                    <h3 style="color: var(--udec-green);"><i class="fa-solid fa-folder-tree"></i> Árbol de Diseño</h3>
+                    <p style="font-size: 14px;">Ubicado a la izquierda. Registra la secuencia histórica de cada croquis y operación realizada.</p>
+                </div>
+                <div class="tile">
+                    <h3 style="color: var(--udec-green);"><i class="fa-solid fa-wand-magic-sparkles"></i> CommandManager</h3>
+                    <p style="font-size: 14px;">La cinta de opciones superior. Agrupa las pestañas de Croquis, Operaciones y Calcular.</p>
+                </div>
+                <div class="tile">
+                    <h3 style="color: var(--udec-green);"><i class="fa-solid fa-compass"></i> Barra de Estado</h3>
+                    <p style="font-size: 14px;">Ubicada en la esquina inferior derecha. Muestra el sistema de unidades activo (ej. MMGS).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: QUIZ 2 (BLOQUEANTE) -->
+    <div class="slide-container" id="slide7" data-quiz="true" data-solved="false" data-correct-index="2">
+        <h2 class="slide-title">Desafío 2: Control de Interfaz</h2>
+        <div class="content-area">
+            <div class="quiz-box">
+                <p class="quiz-question">¿Dónde verificas o cambias rápidamente el sistema de unidades activo de tu proyecto?</p>
+                <div class="options-list">
+                    <div class="option-item" onclick="checkAnswer(this, 0, 7)">
+                        <span>A. En el Árbol de Diseño, buscando la propiedad de material.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 1, 7)">
+                        <span>B. En la pestaña de Complementos del CommandManager.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 2, 7)">
+                        <span>C. En la barra de estado, abajo a la derecha de la ventana gráfica.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                </div>
+                <div id="feedback-7" class="feedback-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 9: METODOLOGÍA DE CROQUIZADO -->
+    <div class="slide-container" id="slide8">
+        <h2 class="slide-title">Metodología de Croquizado</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p>Todo sólido inicia con un boceto plano 2D llamado <strong>Croquis</strong>.</p>
+                    <p style="margin-top: 15px;">El color de las líneas indica el nivel de definición técnica:</p>
+                    <ul style="margin-top: 10px; margin-left: 20px; list-style-type: disc;">
+                        <li><strong>Líneas Azules:</strong> Subdefinido (faltan cotas o relaciones).</li>
+                        <li><strong>Líneas Negras:</strong> Completamente definido (estabilidad dimensional garantizada).</li>
+                    </ul>
+                </div>
+                <div class="image-wrapper">
+                    <!-- Representación vectorial de Croquis definido (Negro) vs Subdefinido (Azul) -->
+                    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#ffffff" stroke="#cbd5e1"/>
+                        <!-- Ejes de referencia en gris -->
+                        <line x1="50" y1="150" x2="350" y2="150" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,4"/>
+                        <line x1="200" y1="50" x2="200" y2="250" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,4"/>
+                        <!-- El origen -->
+                        <circle cx="200" cy="150" r="5" fill="#ef4444"/>
+                        <text x="210" y="145" font-family="monospace" font-size="10" fill="#ef4444">ORIGEN (0,0)</text>
+
+                        <!-- Perfil izquierdo: Subdefinido en Azul -->
+                        <rect x="70" y="70" width="80" height="60" fill="none" stroke="#2563eb" stroke-width="3"/>
+                        <text x="75" y="62" font-family="Poppins" font-size="11" fill="#2563eb" font-weight="bold">Azul = Subdefinido</text>
+
+                        <!-- Perfil derecho: Completamente definido en Negro con cotas -->
+                        <rect x="230" y="70" width="100" height="80" fill="none" stroke="#1e293b" stroke-width="3"/>
+                        <text x="230" y="62" font-family="Poppins" font-size="11" fill="#1e293b" font-weight="bold">Negro = Definido</text>
+                        
+                        <!-- Cotas inteligentes (verde institucional) -->
+                        <!-- Cota horizontal -->
+                        <line x1="230" y1="170" x2="330" y2="170" stroke="#007B3E" stroke-width="1.5"/>
+                        <path d="M 230 170 L 236 167 L 236 173 Z" fill="#007B3E"/>
+                        <path d="M 330 170 L 324 167 L 324 173 Z" fill="#007B3E"/>
+                        <text x="260" y="185" font-family="monospace" font-size="11" fill="#007B3E" font-weight="bold">100 mm</text>
+
+                        <!-- Cota vertical -->
+                        <line x1="350" y1="70" x2="350" y2="150" stroke="#007B3E" stroke-width="1.5"/>
+                        <path d="M 350 70 L 347 76 L 353 76 Z" fill="#007B3E"/>
+                        <path d="M 350 150 L 347 144 L 353 144 Z" fill="#007B3E"/>
+                        <text x="358" y="115" font-family="monospace" font-size="11" fill="#007B3E" font-weight="bold">80 mm</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 10: QUIZ 3 (BLOQUEANTE) -->
+    <div class="slide-container" id="slide9" data-quiz="true" data-solved="false" data-correct-index="0">
+        <h2 class="slide-title">Desafío 3: El Código de Colores</h2>
+        <div class="content-area">
+            <div class="quiz-box">
+                <p class="quiz-question">Para asegurar que tu diseño no se deforme accidentalmente al realizar operaciones 3D, ¿de qué color debe estar el croquis?</p>
+                <div class="options-list">
+                    <div class="option-item" onclick="checkAnswer(this, 0, 9)">
+                        <span>A. Completamente Negro (Definido).</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 1, 9)">
+                        <span>B. Azul brillante para permitir su edición dinámica libre.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 2, 9)">
+                        <span>C. Amarillo de precaución para advertir cambios.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                </div>
+                <div id="feedback-9" class="feedback-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 11: LA EXTRUSIÓN -->
+    <div class="slide-container" id="slide10">
+        <h2 class="slide-title">Operación: Extruir Saliente</h2>
+        <div class="content-area">
+            <div class="mural-layout">
+                <div>
+                    <p>La operación <strong>Extruir Saliente/Base</strong> proyecta el croquis 2D en una dirección lineal perpendicular para darle grosor y volumen.</p>
+                    <p style="margin-top: 15px;">Es ideal para fabricar placas de chasis, soportes de motores y perfiles constantes.</p>
+                    <div style="background-color: var(--bg-accent); padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 4px solid var(--udec-gold);">
+                        <p style="font-size: 15px; font-style: italic;">"Recuerda siempre cerrar los contornos para evitar errores de operación de lámina fina."</p>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="number-badge"><i class="fa-solid fa-cube"></i></div>
+                    <h4>Volumetría Lineal</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 12: LA REVOLUCIÓN -->
+    <div class="slide-container" id="slide11">
+        <h2 class="slide-title">Operación: Revolución</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p>La operación de <strong>Revolución</strong> genera un sólido circular girando un perfil cerrado 2D alrededor de un eje central.</p>
+                    <p style="margin-top: 15px;"><strong>Elementos Indispensables:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Un perfil cerrado de la sección transversal.</li>
+                        <li>Una <strong>Línea Constructiva</strong> que sirva como eje geométrico de rotación.</li>
+                    </ul>
+                </div>
+                <div class="image-wrapper">
+                    <!-- Representación de Revolución 3D de Rueda -->
+                    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#f8fafc" />
+                        
+                        <!-- Eje Constructivo (Dorado) -->
+                        <line x1="50" y1="150" x2="350" y2="150" stroke="#DAAA00" stroke-width="3" stroke-dasharray="10,5,2,5"/>
+                        <text x="210" y="175" font-family="Poppins" font-size="11" fill="#DAAA00" font-weight="bold">EJE DE REVOLUCIÓN</text>
+
+                        <!-- Croquis del Perfil Cerrado 2D (Verde) -->
+                        <rect x="150" y="60" width="100" height="40" fill="#007B3E" fill-opacity="0.2" stroke="#007B3E" stroke-width="2"/>
+                        <text x="160" y="50" font-family="Poppins" font-size="11" fill="#007B3E" font-weight="bold">Perfil Cerrado</text>
+
+                        <!-- Indicación de Giro 360° -->
+                        <path d="M 200 100 A 70 70 0 1 1 200 200" fill="none" stroke="#00482B" stroke-width="2.5" stroke-dasharray="4,2"/>
+                        <path d="M 200 200 L 194 194 L 206 194 Z" fill="#00482B"/>
+                        <text x="110" y="230" font-family="Poppins" font-size="12" fill="#00482B" font-weight="bold">Rotación 360°</text>
+
+                        <!-- El Sólido de Revolución resultante en 3D translúcido -->
+                        <ellipse cx="200" cy="150" rx="90" ry="40" fill="#007B3E" fill-opacity="0.3" stroke="#007B3E" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 13: QUIZ 4 (BLOQUEANTE) -->
+    <div class="slide-container" id="slide12" data-quiz="true" data-solved="false" data-correct-index="1">
+        <h2 class="slide-title">Desafío 4: Criterios de Operación</h2>
+        <div class="content-area">
+            <div class="quiz-box">
+                <p class="quiz-question">Si diseñas una rueda circular para tu robot móvil, ¿cuál de los siguientes elementos es absolutamente INDISPENSABLE para aplicar la revolución?</p>
+                <div class="options-list">
+                    <div class="option-item" onclick="checkAnswer(this, 0, 12)">
+                        <span>A. Un plano de planta inclinado exactamente a 45 grados.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 1, 12)">
+                        <span>B. Una línea constructiva externa al perfil que sirva como eje de giro.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <div class="option-item" onclick="checkAnswer(this, 2, 12)">
+                        <span>C. El comando de cota inteligente aplicado en el extremo de la curva.</span>
+                        <i class="fa-regular fa-circle"></i>
+                    </div>
+                </div>
+                <div id="feedback-12" class="feedback-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 14: CASO PRÁCTICO SENSOR -->
+    <div class="slide-container" id="slide13">
+        <h2 class="slide-title">Soporte de Sensor Acotado</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p><strong>Parámetros del Ejercicio de Clase:</strong></p>
+                    <ul style="margin-top: 15px; margin-left: 20px;">
+                        <li style="margin-bottom: 8px;">Ancho base: 140 mm | Alto total: 110 mm.</li>
+                        <li style="margin-bottom: 8px;">Grosor de la placa: 15 mm (Extrusión).</li>
+                        <li style="margin-bottom: 8px;">3 agujeros pasantes de diámetro Ø 20 mm.</li>
+                        <li style="margin-bottom: 8px;">Distancia simétrica entre centros de taladrados: 45 mm.</li>
+                    </ul>
+                </div>
+                <div class="image-wrapper">
+                    <!-- Vista técnica 3D de la Brida de fijación del soporte del sensor -->
+                    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#ffffff" stroke="#e2e8f0"/>
+                        <!-- Sólido extruido isométrico con los tres agujeros -->
+                        <g transform="translate(60, 50)">
+                            <!-- Cara superior del bloque -->
+                            <path d="M 40 40 L 160 40 L 220 80 L 220 130 L 40 130 Z" fill="#007B3E" fill-opacity="0.1" stroke="#00482B" stroke-width="2.5"/>
+                            <path d="M 40 130 L 40 145 L 220 145 L 220 130 Z" fill="#00482B" stroke="#00482B" stroke-width="2.5"/>
+                            <!-- Los 3 agujeros -->
+                            <circle cx="80" cy="95" r="12" fill="#ffffff" stroke="#DAAA00" stroke-width="2"/>
+                            <circle cx="130" cy="95" r="12" fill="#ffffff" stroke="#DAAA00" stroke-width="2"/>
+                            <circle cx="180" cy="95" r="12" fill="#ffffff" stroke="#DAAA00" stroke-width="2"/>
+                            <!-- Cotas básicas -->
+                            <text x="75" y="165" font-family="Poppins" font-size="11" fill="#00482B" font-weight="bold">Base = 140 mm</text>
+                            <text x="230" y="105" font-family="Poppins" font-size="11" fill="#00482B" font-weight="bold">Grosor = 15 mm</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 15: PROCESO ADITIVO DE IMPRESIÓN -->
+    <div class="slide-container" id="slide14">
+        <h2 class="slide-title">Hacia la Manufactura Aditiva</h2>
+        <div class="content-area">
+            <div class="two-column">
+                <div>
+                    <p>Una vez diseñado y verificado el soporte o rueda, el siguiente paso de un <strong>Creador de Oportunidades</strong> es exportar el archivo en formato <strong>STL</strong>.</p>
+                    <p style="margin-top: 15px;">Este formato fragmenta la pieza en láminas 2D para ser depositada capa por capa en las impresoras 3D del laboratorio tecnológico.</p>
+                </div>
+                <div class="image-wrapper">
+                    <!-- Extrusor de impresora 3D imprimiendo un componente de robot -->
+                    <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#f8fafc" />
+                        <!-- Cama de impresión -->
+                        <line x1="50" y1="240" x2="350" y2="240" stroke="#1e293b" stroke-width="4"/>
+                        <text x="130" y="265" font-family="Poppins" font-size="11" fill="#1e293b" font-weight="bold">Cama caliente de impresión</text>
+
+                        <!-- Capas depositadas de la pieza (Verde) -->
+                        <rect x="130" y="180" width="140" height="60" fill="#007B3E" rx="4" fill-opacity="0.8"/>
+                        <line x1="130" y1="220" x2="270" y2="220" stroke="#00482B" stroke-width="1.5"/>
+                        <line x1="130" y1="200" x2="270" y2="200" stroke="#00482B" stroke-width="1.5"/>
+
+                        <!-- Filamento de oro derritiéndose -->
+                        <path d="M 200 80 L 200 180" stroke="#DAAA00" stroke-width="4"/>
+
+                        <!-- Nozzle / Boquilla de extrusión -->
+                        <path d="M 175 80 L 225 80 L 210 120 L 190 120 Z" fill="#475569" stroke="#1e293b" stroke-width="2"/>
+                        <path d="M 190 120 L 210 120 L 203 140 L 197 140 Z" fill="#DAAA00" stroke="#1e293b" stroke-width="1.5"/>
+
+                        <!-- Destello de calor/fusión -->
+                        <circle cx="200" cy="180" r="8" fill="#DAAA00" opacity="0.6"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 16: DICCIONARIO TÉCNICO -->
+    <div class="slide-container" id="slide15">
+        <h2 class="slide-title">Glosario de SolidWorks</h2>
+        <div class="content-area">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Término</th>
+                        <th>Definición Operativa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Relación de Posición</strong></td>
+                        <td>Restricciones que vinculan piezas mecánicas entre sí en ensamblajes.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Línea Constructiva</strong></td>
+                        <td>Entidad de referencia en el croquis que no influye en operaciones 3D básicas.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vaciado</strong></td>
+                        <td>Elimina material interior de un sólido para crear una carcasa delgada.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fillet / Redondeo</strong></td>
+                        <td>Suaviza aristas filosas creando transiciones circulares suaves.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SLIDE 17: CIERRE -->
+    <div class="slide-container title-layout" id="slide16">
+        <h1 style="font-size: 48px;">¡Excelente Trabajo, Creador de Oportunidades!</h1>
+        <p style="margin: 20px auto; max-width: 800px;">Has completado el módulo teórico-práctico del curso introductorio y estás listo para pasar al taller físico y de manufactura 3D.</p>
+        <p style="font-style: italic; color: var(--udec-gold); font-size: 24px; margin-top: 30px;">"Ex Umbra In Solem"</p>
+        <div style="margin-top: 50px; font-size: 14px; opacity: 0.8;">
+            <p>Universidad de Cundinamarca | Facultad de Ingeniería | Sede Fusagasugá</p>
+        </div>
+    </div>
+
+    <!-- CONTROLES COMUNES DE NAVEGACIÓN -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+        <span class="motto-text">EX UMBRA IN SOLEM</span>
+        <span class="progress-indicator" id="progress-text">Slide 1 / 17</span>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+</div>
+
+<script>
+    // Configuración general de la presentación
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    const totalSlides = slides.length;
+
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progressText = document.getElementById('progress-text');
+
+    // Inicializar visualización de diapositivas
+    function updatePresentation() {
+        slides.forEach((slide, idx) => {
+            if (idx === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+
+        // Actualizar progreso
+        progressText.innerText = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+        // Controlar botones de navegación ordinarios
+        prevBtn.disabled = currentSlide === 0;
+
+        // Validar si la diapositiva actual es un quiz y está bloqueada
+        const currentSlideEl = slides[currentSlide];
+        if (currentSlideEl.getAttribute('data-quiz') === 'true' && currentSlideEl.getAttribute('data-solved') === 'false') {
+            nextBtn.disabled = true;
+            nextBtn.classList.add('locked-btn');
+            nextBtn.innerHTML = '¡Desafío Bloqueado! <i class="fa-solid fa-lock"></i>';
+        } else {
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            nextBtn.classList.remove('locked-btn');
+            nextBtn.innerHTML = 'Siguiente <i class="fa-solid fa-arrow-right"></i>';
+        }
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updatePresentation();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updatePresentation();
+        }
+    }
+
+    // Lógica interactiva de los Quices corregida para pintar y bloquear/desbloquear correctamente
+    function checkAnswer(selectedElement, selectedIndex, slideIndex) {
+        const slideEl = document.getElementById(`slide${slideIndex}`);
+        const correctIndex = parseInt(slideEl.getAttribute('data-correct-index'), 10);
+        const options = slideEl.querySelectorAll('.option-item');
+        const feedbackMsg = document.getElementById(`feedback-${slideIndex}`);
+
+        // Limpiar estilos previos en las opciones de esta pregunta
+        options.forEach(opt => {
+            opt.className = 'option-item';
+            const icon = opt.querySelector('i');
+            if (icon) {
+                icon.className = 'fa-regular fa-circle';
+            }
+        });
+
+        if (selectedIndex === correctIndex) {
+            // Marcar respuesta correcta
+            selectedElement.classList.add('correct');
+            const icon = selectedElement.querySelector('i');
+            if (icon) {
+                icon.className = 'fa-solid fa-circle-check';
+            }
+
+            feedbackMsg.innerText = "¡Correcto, Creador de Oportunidades! El conocimiento ha sido apropiado.";
+            feedbackMsg.className = "feedback-message correct-msg";
+            feedbackMsg.style.display = "block";
+
+            // Desbloquear diapositiva
+            slideEl.setAttribute('data-solved', 'true');
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('locked-btn');
+            nextBtn.innerHTML = 'Siguiente <i class="fa-solid fa-arrow-right"></i>';
+        } else {
+            // Marcar respuesta incorrecta
+            selectedElement.classList.add('wrong');
+            const icon = selectedElement.querySelector('i');
+            if (icon) {
+                icon.className = 'fa-solid fa-circle-xmark';
+            }
+
+            feedbackMsg.innerText = "Respuesta incorrecta. Analiza los conceptos e inténtalo de nuevo.";
+            feedbackMsg.className = "feedback-message wrong-msg";
+            feedbackMsg.style.display = "block";
+
+            // Asegurar que continúe bloqueado
+            slideEl.setAttribute('data-solved', 'false');
+            nextBtn.disabled = true;
+            nextBtn.classList.add('locked-btn');
+            nextBtn.innerHTML = '¡Desafío Bloqueado! <i class="fa-solid fa-lock"></i>';
+        }
+    }
+
+    // Inicializar primera vista
+    window.onload = () => {
+        updatePresentation();
+    };
+</script>
+
+</body>
+</html>
